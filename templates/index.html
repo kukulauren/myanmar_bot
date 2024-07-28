@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .chat-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .chat-box {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 20px;
+            height: 300px;
+            overflow-y: scroll;
+        }
+        .input-group {
+            display: flex;
+            margin-top: 10px;
+        }
+        .input-group input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .input-group input[type="submit"] {
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .input-group input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="chat-container">
+    <h1>Chat with MyanmarGPT</h1>
+    <div id="chat-box" class="chat-box">
+        <!-- Messages will be displayed here -->
+    </div>
+    <form id="chat-form" action="/get" method="get">
+        <div class="input-group">
+            <input type="text" id="user-msg" name="msg" placeholder="Type your message..." required>
+            <input type="submit" value="Send">
+        </div>
+    </form>
+</div>
+
+<script>
+    const chatBox = document.getElementById('chat-box');
+    const form = document.getElementById('chat-form');
+    const userMsgInput = document.getElementById('user-msg');
+
+    form.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const userMessage = userMsgInput.value;
+        chatBox.innerHTML += `<div>User: ${userMessage}</div>`;
+        userMsgInput.value = '';
+
+        const response = await fetch(`/get?msg=${encodeURIComponent(userMessage)}`);
+        const botResponse = await response.text();
+        chatBox.innerHTML += `<div>Assistant: ${botResponse}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom
+    });
+</script>
+</body>
+</html>
